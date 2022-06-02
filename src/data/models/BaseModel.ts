@@ -10,7 +10,4 @@ export default class BaseModel extends BaseEntity {
 
   @Column({ name: 'created_at' })
   createdAt: string
-
-  @Column({ name: 'updated_at' })
-  updatedAt: string
 }

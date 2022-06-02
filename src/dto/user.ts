@@ -1,8 +1,10 @@
-export interface token {
-  [k: string]: string[]
+export interface login {
+  login: string
+  password: string
 }
 
-export interface login {
+export interface createUser {
+  pubKey: string
   login: string
   password: string
 }

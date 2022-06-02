@@ -1,30 +1,42 @@
 import { UserInputError } from 'apollo-server'
 
 import Services from '../'
-import { login } from '../../dto'
-// import { UserQuery } from '../../data/query'
+import { login, createUser } from '../../dto'
+import { UserQuery } from '../../data/query'
 import { Hash, Jwt } from '../../frameworks'
-import { loginValidator } from './validators'
+import { loginValidator, createValidator } from './validators'
 
 class UserServices extends Services {
-  async login (input: login): Promise<string> {
+  async create (req: createUser): Promise<string> {
     await this.gateway({
-      req: input,
+      req,
+      schema: createValidator
+    })
+
+    const { password, ...user } = req
+
+    const hashedPassword = await Hash.setPassword(password)
+
+    const base = this.createBase()
+
+    await UserQuery.create({ ...base, ...user, password: hashedPassword })
+
+    return base.id
+  }
+
+  async login (req: login): Promise<string> {
+    await this.gateway({
+      req,
       schema: loginValidator
     })
 
-    const [{ firstName, lastName, id, password }, permissions] = await new Promise((resolve) => resolve([{
-      firstName: '',
-      lastName: '',
-      id: '',
-      password: ''
-    }, []]))
+    const { id, password } = await UserQuery.login(req.login)
 
-    if (!await Hash.verifyPassword(password, input.password)) {
+    if (!await Hash.verifyPassword(password, req.password)) {
       throw new UserInputError('invalid password')
     }
 
-    const token = Jwt.sign(id, firstName, lastName, permissions)
+    const token = Jwt.sign(id)
 
     return token
   }

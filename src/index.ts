@@ -5,7 +5,7 @@ import app from './app'
 TypeOrmDatabase.connect()
   .then(() => {
     console.log('Connected with the database')
-    app.listen()
+    app.graph.listen()
       .then(({ url }) => { console.log(`🚀  Server ready at ${url}`) })
       .catch(err => { console.log('❌ Failed to start server', err) })
   })
