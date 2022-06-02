@@ -7,7 +7,7 @@ class SocketServer {
     this.server = new Server(5050, {
       cors: {
         origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
+        methods: ['GET'],
         credentials: true
       }
     })
