@@ -22,7 +22,9 @@ class UserServices extends Services {
 
     await UserQuery.create({ ...base, ...user, password: hashedPassword })
 
-    return base.id
+    const token = Jwt.sign(base.id)
+
+    return token
   }
 
   async login (req: login): Promise<string> {

@@ -29,7 +29,7 @@ extend type Query {
 }
 
 extend type Mutation {
-  createUser(input: CreateUser!): ID!
+  createUser(input: CreateUser!): String!
 }
 `
 
