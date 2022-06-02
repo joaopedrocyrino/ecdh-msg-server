@@ -1,4 +1,5 @@
 import { UserInputError } from 'apollo-server'
+import { FindConditions } from 'typeorm'
 
 import { UserModel } from '../models'
 
@@ -25,8 +26,13 @@ class UserQuery {
     return user
   }
 
-  async getOne (id: string): Promise<UserModel> {
-    const user = await UserModel.findOne({ id, isDeleted: false })
+  async getMany (where?: FindConditions<UserModel> | Array<FindConditions<UserModel>>): Promise<UserModel[]> {
+    const users = await UserModel.find({ where })
+    return users
+  }
+
+  async getOne (where: FindConditions<UserModel> | Array<FindConditions<UserModel>>): Promise<UserModel> {
+    const user = await UserModel.findOne({ where })
     if (!user) { throw new UserInputError('User not found') }
 
     return user

@@ -10,7 +10,7 @@ class SocketServer {
     })
   }
 
-  async emit (channel: string, data: any): Promise<void> {
+  emit (channel: string, data: any): void {
     this.server.emit(channel, data)
   }
 }

@@ -22,6 +22,11 @@ class ChatQuery {
     await new ChatModel(chat).save()
   }
 
+  async getMany (where?: FindConditions<ChatModel> | Array<FindConditions<ChatModel>>): Promise<ChatModel[]> {
+    const chats = await ChatModel.find({ where })
+    return chats
+  }
+
   async getOne (where: FindConditions<ChatModel> | Array<FindConditions<ChatModel>>): Promise<ChatModel> {
     const chat = await ChatModel.findOne({ where })
     if (!chat) { throw new UserInputError('Chat not found') }

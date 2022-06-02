@@ -10,6 +10,7 @@ type User {
   login: String!
   createdAt: String!
   isDeleted: Boolean!
+  chats: [Chat]!
 }
 
 input Login {
@@ -39,6 +40,9 @@ export default {
     },
     Mutation: {
       createUser: async (root: any, { input }: { input: createUser }) => await UserServices.create(input)
+    },
+    User: {
+      chats: async (root: any) => await UserServices.chats(root.id)
     }
   },
   typeDefs: [typeDefs]
