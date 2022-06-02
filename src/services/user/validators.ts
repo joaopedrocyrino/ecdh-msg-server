@@ -10,3 +10,7 @@ export const createValidator = Joi.object({
   login: Joi.string().required(),
   password: Joi.string().required()
 })
+
+export const getOneValidator = Joi.object({
+  userId: Joi.string().guid().required()
+})

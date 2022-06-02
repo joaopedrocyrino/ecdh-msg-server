@@ -1,8 +1,8 @@
 import Services from '..'
-import { createChat } from '../../dto'
+import { createChat, getOneChat } from '../../dto'
 import { ChatQuery, MsgQuery, UserQuery } from '../../data/query'
-import { createValidator } from './validators'
-import { MsgModel, UserModel } from '../../data/models'
+import { createValidator, getOneValidator } from './validators'
+import { ChatModel, MsgModel, UserModel } from '../../data/models'
 
 class ChatServices extends Services {
   async create ({ token, ...req }: createChat): Promise<string> {
@@ -19,6 +19,23 @@ class ChatServices extends Services {
     await ChatQuery.create({ ...base, bob, alice: userId })
 
     return base.id
+  }
+
+  async getOne ({ token, ...req }: getOneChat): Promise<ChatModel> {
+    await this.gateway({
+      token,
+      req,
+      schema: getOneValidator
+    })
+
+    const { id, userId } = req as { userId: string, id: string }
+
+    const chat = await ChatQuery.getOne([
+      { id, alice: userId, isDeleted: false },
+      { id, bob: userId, isDeleted: false }
+    ])
+
+    return chat
   }
 
   async msgs (id: string): Promise<MsgModel[]> {

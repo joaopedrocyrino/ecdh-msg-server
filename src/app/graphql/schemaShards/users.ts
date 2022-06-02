@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server'
 
 import UserServices from '../../../services/user'
-import { login, createUser } from '../../../dto'
+import { login, createUser, getOneUser } from '../../../dto'
 
 const typeDefs = gql`
 type User {
@@ -24,8 +24,13 @@ input CreateUser {
   password: String!
 }
 
+input GetOneUser {
+  token: String!
+}
+
 extend type Query {
-  login(input: Login!): String
+  getOneUser(input: GetOneUser!): User!
+  login(input: Login!): String!
 }
 
 extend type Mutation {
@@ -36,6 +41,7 @@ extend type Mutation {
 export default {
   resolvers: {
     Query: {
+      getOneUser: async (root: any, { input }: { input: getOneUser }) => await UserServices.getOne(input),
       login: async (root: any, { input }: { input: login }) => await UserServices.login(input)
     },
     Mutation: {

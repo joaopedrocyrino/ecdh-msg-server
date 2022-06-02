@@ -4,7 +4,13 @@ class SocketServer {
   private readonly server: Server
 
   constructor () {
-    this.server = new Server(5050)
+    this.server = new Server(5050, {
+      cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+        credentials: true
+      }
+    })
     this.server.on('connection', (socket) => {
       console.log(`🚀 socket client connected: ${socket.id}`)
     })

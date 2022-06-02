@@ -1,7 +1,7 @@
 import { gql } from 'apollo-server'
 
 import ChatServices from '../../../services/chat'
-import { createChat } from '../../../dto'
+import { createChat, getOneChat } from '../../../dto'
 
 const typeDefs = gql`
 type Chat {
@@ -19,6 +19,15 @@ input CreateChat {
   bob: ID!
 }
 
+input GetOneChat {
+  token: String!
+  id: ID!
+}
+
+extend type Query {
+  getOneChat(input: GetOneChat!): Chat!
+}
+
 extend type Mutation {
   createChat(input: CreateChat!): ID!
 }
@@ -28,6 +37,9 @@ export default {
   resolvers: {
     Mutation: {
       createChat: async (root: any, { input }: { input: createChat }) => await ChatServices.create(input)
+    },
+    Query: {
+      getOneChat: async (root: any, { input }: { input: getOneChat }) => await ChatServices.getOne(input)
     },
     Chat: {
       msgs: async (root: any) => await ChatServices.msgs(root.id),

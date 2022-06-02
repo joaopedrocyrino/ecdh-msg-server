@@ -1,11 +1,11 @@
 import { UserInputError } from 'apollo-server'
 
 import Services from '../'
-import { login, createUser } from '../../dto'
+import { login, createUser, getOneUser } from '../../dto'
 import { UserQuery, ChatQuery } from '../../data/query'
 import { Hash, Jwt } from '../../frameworks'
-import { loginValidator, createValidator } from './validators'
-import { ChatModel } from '@/data/models'
+import { loginValidator, createValidator, getOneValidator } from './validators'
+import { ChatModel, UserModel } from '@/data/models'
 
 class UserServices extends Services {
   async create (req: createUser): Promise<string> {
@@ -42,6 +42,20 @@ class UserServices extends Services {
     const token = Jwt.sign(id)
 
     return token
+  }
+
+  async getOne ({ token, ...req }: getOneUser): Promise<UserModel> {
+    await this.gateway({
+      token,
+      req,
+      schema: getOneValidator
+    })
+
+    const { userId } = req as { userId: string }
+
+    const user = await UserQuery.getOne({ id: userId })
+
+    return user
   }
 
   async chats (id: string): Promise<ChatModel[]> {

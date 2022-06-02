@@ -1,7 +1,7 @@
 import { Column, Entity } from 'typeorm'
 import BaseModel from './BaseModel'
 
-@Entity('user')
+@Entity('msg')
 export default class MsgModel extends BaseModel {
   @Column({ name: 'chat_id' })
   chatId: string

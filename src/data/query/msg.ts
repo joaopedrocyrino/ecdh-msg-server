@@ -16,8 +16,8 @@ class MsgQuery {
     await UserQuery.getOne({ id: msg.sender, isDeleted: false })
 
     await ChatQuery.getOne([
-      { alice: msg.sender, isDeleted: false, id: msg.id },
-      { bob: msg.sender, isDeleted: false, id: msg.id }
+      { alice: msg.sender, isDeleted: false, id: msg.chatId },
+      { bob: msg.sender, isDeleted: false, id: msg.chatId }
     ])
 
     const newMsg = new MsgModel(msg)

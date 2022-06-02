@@ -8,3 +8,7 @@ export interface createUser {
   login: string
   password: string
 }
+
+export interface getOneUser {
+  token: string
+}
