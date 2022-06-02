@@ -12,6 +12,16 @@ class UserQuery {
     createdAt: string
     isDeleted: boolean
   }): Promise<void> {
+    const prevUser = await UserModel.findOne({
+      where: [
+        { isDeleted: false, password: user.password },
+        { isDeleted: false, login: user.login },
+        { isDeleted: false, pubKey: user.pubKey }
+      ]
+    })
+
+    if (prevUser) { throw new UserInputError('User already exists') }
+
     await new UserModel(user).save()
   }
 

@@ -1,6 +1,7 @@
 import { UserInputError } from 'apollo-server'
 import { FindConditions } from 'typeorm'
 import { ChatModel } from '../models'
+import UserQuery from './user'
 
 class ChatQuery {
   async create (chat: {
@@ -10,6 +11,9 @@ class ChatQuery {
     createdAt: string
     isDeleted: boolean
   }): Promise<void> {
+    await UserQuery.getOne({ isDeleted: false, id: chat.alice })
+    await UserQuery.getOne({ isDeleted: false, id: chat.bob })
+
     const prevChat = await ChatModel.findOne({
       where: [
         { alice: chat.alice, bob: chat.bob, isDeleted: false },
